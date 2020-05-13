@@ -15,6 +15,8 @@ import java.util.stream.IntStream;
 @Service
 public class GameService {
 
+    public static final int SCORE_LIMIT = 20000;
+
     private final InMemoryDB db;
 
     @Autowired
@@ -56,7 +58,9 @@ public class GameService {
     }
 
     public List<UserPositionResponse> getHighScore() {
-        final Collection<User> users = this.db.fetchAll();
+        final Collection<User> users = this.db.fetchAll().stream()
+                .filter(o -> o.getScore() <= SCORE_LIMIT)
+                .collect(Collectors.toList());
         final User[] array = users.toArray(new User[0]);
         return users.stream().map(o -> {
             int position = getPosition(array, o.getUserId());

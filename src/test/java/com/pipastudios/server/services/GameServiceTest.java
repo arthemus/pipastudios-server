@@ -62,4 +62,16 @@ public class GameServiceTest {
         Assertions.assertNotNull(highScore);
         Assertions.assertTrue(highScore.isEmpty());
     }
+
+    @Test
+    public void test_getting_highscore_list_limited_by_2000() {
+        this.gameService.doSavePoints(1, 15600);
+        this.gameService.doSavePoints(2, 19999);
+        this.gameService.doSavePoints(3, 20001);
+        this.gameService.doSavePoints(4, 20000);
+        List<UserPositionResponse> highScore = this.gameService.getHighScore();
+        Assertions.assertNotNull(highScore);
+        Assertions.assertEquals(4, highScore.get(0).getUserId());
+        Assertions.assertEquals(1, highScore.get(highScore.size() - 1).getUserId());
+    }
 }
